@@ -1,12 +1,12 @@
 // Entrypoint for API
-package main
+package wheretoeat
 
 import (
- 	"log"
- 	"net/http"
- 	"os"
+	"log"
+	"net/http"
+	"os"
+
 	"github.com/gorilla/handlers"
-	"where-to-eat/store"
 )
 
 func main() {
@@ -17,12 +17,12 @@ func main() {
 		log.Fatal("$PORT must be set")
 	}
 
-	router := store.NewRouter() // create routes
+	router := NewRouter() // create routes
 
 	// These two lines are important if you're designing a front-end to utilise this API methods
 	allowedOrigins := handlers.AllowedOrigins([]string{"*"})
- 	allowedMethods := handlers.AllowedMethods([]string{"GET", "POST", "DELETE", "PUT"})
+	allowedMethods := handlers.AllowedMethods([]string{"GET", "POST", "DELETE", "PUT"})
 
 	// Launch server with CORS validations
- 	log.Fatal(http.ListenAndServe(":" + port, handlers.CORS(allowedOrigins, allowedMethods)(router)))
+	log.Fatal(http.ListenAndServe(":"+port, handlers.CORS(allowedOrigins, allowedMethods)(router)))
 }
