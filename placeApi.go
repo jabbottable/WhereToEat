@@ -2,9 +2,7 @@ package wheretoeat
 
 import (
 	"flag"
-	"fmt"
 	"log"
-	"os"
 	"strconv"
 
 	"github.com/kr/pretty"
@@ -31,13 +29,6 @@ var (
 	placeType = flag.String("type", "", "Restricts the results to places matching the specified type.")
 	pageToken = flag.String("pagetoken", "", "Set to retrieve the next page of results.")
 )
-
-func usageAndExit(msg string) {
-	fmt.Fprintln(os.Stderr, msg)
-	fmt.Println("Flags:")
-	flag.PrintDefaults()
-	os.Exit(2)
-}
 
 func check(err error) {
 	if err != nil {
@@ -71,9 +62,8 @@ func (p PlaceAPI) FindFood(locations Location) maps.PlacesSearchResponse {
 		client, err = maps.NewClient(maps.WithAPIKey(*apiKey))
 	} else if *clientID != "" || *signature != "" {
 		client, err = maps.NewClient(maps.WithClientIDAndSignature(*clientID, *signature))
-	} else {
-		usageAndExit("Please specify an API Key, or Client ID and Signature.")
 	}
+
 	check(err)
 
 	r := &maps.NearbySearchRequest{
@@ -117,8 +107,6 @@ func parsePriceLevel(priceLevel string) maps.PriceLevel {
 		return maps.PriceLevelExpensive
 	case "4":
 		return maps.PriceLevelVeryExpensive
-	default:
-		usageAndExit(fmt.Sprintf("Unknown price level: '%s'", priceLevel))
 	}
 	return maps.PriceLevelFree
 }
@@ -143,17 +131,13 @@ func parseRankBy(rankBy string, r *maps.NearbySearchRequest) {
 		return
 	case "":
 		return
-	default:
-		usageAndExit(fmt.Sprintf("Unknown rank by: \"%v\"", rankBy))
 	}
 }
 
 func parsePlaceType(placeType string, r *maps.NearbySearchRequest) {
 	if placeType != "" {
 		t, err := maps.ParsePlaceType(placeType)
-		if err != nil {
-			usageAndExit(fmt.Sprintf("Unknown place type \"%v\"", placeType))
-		}
+		check(err)
 
 		r.Type = t
 	}
