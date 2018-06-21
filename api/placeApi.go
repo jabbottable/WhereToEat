@@ -8,7 +8,6 @@ import (
 	"where-to-eat/configuration"
 	"where-to-eat/model"
 
-	"github.com/kr/pretty"
 	"golang.org/x/net/context"
 	"googlemaps.github.io/maps"
 )
@@ -49,7 +48,7 @@ func LocationString(l model.Location) string {
 }
 
 // FindFood returns places based on a location
-func (p PlaceAPI) FindFood(locations model.Location) maps.PlacesSearchResponse {
+func FindFood(locations model.Location) maps.PlacesSearchResponse {
 	var err error
 	config, err := configuration.Config("conf.json")
 	check(err)
@@ -84,8 +83,6 @@ func (p PlaceAPI) FindFood(locations model.Location) maps.PlacesSearchResponse {
 
 	resp, err := client.NearbySearch(context.Background(), r)
 	check(err)
-
-	pretty.Println(resp)
 
 	return resp
 }

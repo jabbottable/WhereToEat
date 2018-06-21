@@ -11,13 +11,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
-//Controller ...
-type Controller struct {
-	PlaceAPI api.PlaceAPI
-}
-
 // FindFood GET /
-func (c *Controller) FindFood(w http.ResponseWriter, r *http.Request) {
+func FindFood(w http.ResponseWriter, r *http.Request) {
 	var location model.Location
 	vars := mux.Vars(r)
 
@@ -42,7 +37,7 @@ func (c *Controller) FindFood(w http.ResponseWriter, r *http.Request) {
 	location.Latitude = latitude
 
 	log.Println(location)
-	placesSearchResponse := c.PlaceAPI.FindFood(location)
+	placesSearchResponse := api.FindFood(location)
 	data, _ := json.Marshal(placesSearchResponse)
 	success := true
 	if !success {
